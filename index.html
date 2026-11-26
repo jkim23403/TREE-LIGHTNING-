@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="UAS and drone event weather risk product" />
+  <title>KCOF UAS Weather Risk Product | Refined</title>
+  <style>
+    :root{--navy:#071c33;--navy2:#0c3158;--blue:#1479bd;--cyan:#26b7df;--ink:#101828;--text:#475467;--muted:#667085;--line:#eaecf0;--bg:#f5f7fa;--white:#fff;--go:#137a46;--gobg:#eaf8ef;--watch:#a96400;--watchbg:#fff3d8;--nogo:#b42318;--nogobg:#fff0ee;--shadow:0 8px 20px rgba(16,24,40,.09)}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.4}.container{width:min(1500px,calc(100% - 32px));margin:auto}
+    header{padding:26px 0;color:#fff;background:linear-gradient(125deg,rgba(7,28,51,.96),rgba(12,49,88,.92)),radial-gradient(circle at top right,#1479bd,#071c33);border-bottom:5px solid var(--cyan)}.header-layout{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.eyebrow{margin:0 0 6px;color:#93dcf4;font-size:.78rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}h1{margin:0;font-size:clamp(1.6rem,3vw,2.35rem);line-height:1.15}.subtitle{margin:8px 0 0;color:#dbeeff}.update-box{min-width:235px;padding:13px 15px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:rgba(255,255,255,.1);font-size:.9rem}.update-box strong{display:block;margin-bottom:3px}
+    main{padding:24px 0 40px}.status-strip{display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:14px;margin-bottom:24px}.status-card{padding:15px;border:1px solid var(--line);border-radius:9px;background:var(--white);box-shadow:var(--shadow)}.status-label,.primary-label{display:block;margin-bottom:6px;color:var(--muted);font-size:.72rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.status-value{font-size:1rem;font-weight:800}.go{color:var(--go)}.watch{color:var(--watch)}.no-go{color:var(--nogo)}
+    .period-header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:30px 0 14px;padding:16px 18px;border-radius:9px;color:#fff;background:var(--navy)}.period-header.pm{background:linear-gradient(90deg,#142235,#281a3c);border-left:6px solid #b58cff}.period-title{display:flex;align-items:center;gap:12px}.period-icon{font-size:1.55rem}.period-header h2{margin:0;font-size:1.18rem}.period-header p{margin:3px 0 0;color:#d5e7f6;font-size:.88rem}.period-header.pm p{color:#e9dcff}.legend{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px;font-size:.75rem;font-weight:800}.legend span{padding:5px 8px;border-radius:999px}.legend-go{color:#075d32;background:#c9f1d8}.legend-watch{color:#765000;background:#ffe8a3}.legend-no-go{color:#8c1710;background:#ffc9c5}
+    .forecast-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.day-card{overflow:hidden;border:1px solid var(--line);border-top:5px solid var(--blue);border-radius:10px;background:var(--white);box-shadow:var(--shadow)}.pm-card{border-top-color:#9a70e2}.card-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 15px 12px;border-bottom:1px solid var(--line);background:#fbfdff}.day{margin:0;color:var(--navy);font-size:1.05rem}.date{margin:2px 0 0;color:var(--muted);font-size:.8rem;font-weight:700}.risk-badge{padding:5px 8px;border-radius:999px;font-size:.7rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase}.risk-badge.go{color:var(--go);background:var(--gobg)}.risk-badge.watch{color:var(--watch);background:var(--watchbg)}.risk-badge.no-go{color:var(--nogo);background:var(--nogobg)}.primary-readout{padding:14px 15px;background:#f7fbff}.primary-value{display:block;margin-top:4px;color:var(--navy);font-size:1.18rem;font-weight:900}.primary-note{display:block;margin-top:4px;color:var(--text);font-size:.82rem}.metrics{padding:4px 15px 13px}.metric{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}.metric:last-child{border-bottom:0}.metric-icon{font-size:1.1rem;text-align:center}.metric-label{color:var(--text);font-size:.82rem}.metric-value{color:var(--ink);font-size:.82rem;font-weight:800;text-align:right}.decision-note{margin:14px 0 0;padding:14px 16px;border-left:5px solid var(--blue);border-radius:6px;color:var(--text);background:#eaf4fc;font-size:.88rem}footer{padding:20px 0 28px;color:var(--muted);font-size:.78rem;text-align:center}
+    @media(max-width:900px){.status-strip{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.header-layout,.period-header{flex-direction:column}.update-box{width:100%}.status-strip{grid-template-columns:1fr}.legend{justify-content:flex-start}}@media print{body{background:#fff}main{padding-top:10px}.forecast-grid{grid-template-columns:repeat(2,1fr);gap:10px}.day-card,.status-card{box-shadow:none}.day-card{break-inside:avoid}}
+
+    /* Editing and export controls */
+    .action-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 22px;padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:#fff;box-shadow:var(--shadow)}
+    .action-bar p{margin:0;color:var(--text);font-size:.86rem}.action-group{display:flex;flex-wrap:wrap;gap:8px}.action-btn{border:1px solid var(--blue);border-radius:6px;background:#fff;color:var(--navy);padding:9px 12px;font:700 .84rem Arial,Helvetica,sans-serif;cursor:pointer}.action-btn:hover,.action-btn.primary{background:var(--navy);color:#fff}.action-btn.danger{border-color:var(--nogo);color:var(--nogo)}.action-btn.danger:hover{background:var(--nogo);color:#fff}
+    .edit-mode [data-editable="true"]{outline:2px dashed var(--cyan);outline-offset:3px;border-radius:3px;cursor:text}.edit-mode [data-editable="true"]:focus{outline-color:var(--blue);background:#fffde8}.edit-hint{display:none;margin:0 0 14px;padding:10px 12px;border-left:4px solid var(--cyan);background:#eaf7fc;color:var(--text);font-size:.84rem}.edit-mode .edit-hint{display:block}
+    @media print{.action-bar,.edit-hint{display:none!important}.edit-mode [data-editable="true"]{outline:none!important;background:transparent!important}}
+  
+/* Refined operations layout: compact seven-day cards, clearer AM/PM separation, and print-safe presentation. */
+:root{--ops-blue:#0a4d7a;--ops-cyan:#24b9df;--ops-violet:#67419e;--ops-panel:#f8fbfd}
+header{box-shadow:inset 0 -1px 0 rgba(255,255,255,.2)}
+.status-strip{gap:10px}.status-card{border-radius:6px}.period-header{margin-top:20px;box-shadow:0 3px 10px rgba(16,24,40,.08)}
+.forecast-grid{grid-template-columns:repeat(7,minmax(172px,1fr));gap:10px;overflow-x:auto;padding-bottom:5px}.day-card{min-width:172px;border-radius:7px}.card-top{padding:11px 11px 9px}.primary-readout{padding:11px}.metrics{padding:3px 11px 10px}.metric{padding:8px 0}.metric-icon{font-size:1rem}.metric-label,.metric-value{font-size:.76rem}.decision-note{margin-top:12px}.toolbar-note{font-size:.8rem}
+@media(max-width:1200px){.forecast-grid{grid-template-columns:repeat(4,minmax(185px,1fr))}}@media(max-width:760px){.forecast-grid{grid-template-columns:repeat(2,minmax(160px,1fr))}}
+@media print{@page{size:landscape;margin:.35in}.forecast-grid{grid-template-columns:repeat(7,1fr);gap:5px;overflow:visible}.day-card{min-width:0;box-shadow:none}.card-top{padding:6px}.day-name{font-size:10px}.date,.metric-label,.metric-value{font-size:7px}.primary-readout{padding:6px}.primary-label{font-size:6px}.primary-value{font-size:8px}.primary-note{font-size:7px}.metrics{padding:2px 6px 4px}.metric{padding:4px 0}.period-header{margin:8px 0 5px;padding:8px 10px}.period-header h2{font-size:12px}.period-header p{font-size:8px}.status-card{padding:7px}.status-label{font-size:7px}.status-value{font-size:10px}}
+
+</style>
+</head>
+<body>
+  <header><div class="container header-layout"><div><p class="eyebrow">UAS / Drone Weather Decision Support</p><h1 data-editable="true">Tree Lighting Ceremony &amp; Drone Show</h1><p class="subtitle" data-editable="true">KCOF | 27 Nov–03 Dec 2026 | NWS Melbourne point-forecast reference</p></div><div class="update-box"><strong>Forecast Updated</strong><span data-editable="true">26 Nov 2026 | 0900 Local</span></div></div></header>
+  <main class="container">
+    <section class="action-bar" aria-label="Product actions">
+      <p><strong>Editable product:</strong> Select <em>Edit Product</em>, update displayed text, then save or export.</p>
+      <div class="action-group">
+        <button class="action-btn primary" id="editToggle" type="button">Edit Product</button>
+        <button class="action-btn" id="saveProduct" type="button">Save Changes</button>
+        <button class="action-btn" id="exportPdf" type="button">Export / Print PDF</button>
+        <button class="action-btn danger" id="resetProduct" type="button">Reset</button>
+      </div>
+    </section>
+    <p class="edit-hint">Edit mode is active. Click any outlined text to change it. Changes are saved in this browser only when you select <strong>Save Changes</strong>. Select <strong>Export / Print PDF</strong> and choose “Save as PDF” in your browser print dialog.</p>
+
+    <section class="status-strip" aria-label="Operational status summary"><div class="status-card"><span class="status-label">Overall Planning Posture</span><span class="status-value watch" data-editable="true">WATCH</span></div><div class="status-card"><span class="status-label">Primary Concern</span><span class="status-value" data-editable="true">Wind / Gusts</span></div><div class="status-card"><span class="status-label">Mission Window</span><span class="status-value" data-editable="true">PM Drone Show</span></div><div class="status-card"><span class="status-label">Required Action</span><span class="status-value" data-editable="true">Reassess Before Go/No-Go</span></div></section>
+    <section aria-labelledby="amTitle"><div class="period-header"><div class="period-title"><span class="period-icon">🌤️</span><div><h2 id="amTitle" data-editable="true">AM — Setup / Pre-Flight Conditions</h2><p data-editable="true">Use for crew arrival, equipment setup, airspace coordination, and flight preparation.</p></div></div><div class="legend"><span class="legend-go">GO</span><span class="legend-watch">WATCH</span><span class="legend-no-go">NO-GO</span></div></div><div id="amForecastGrid" class="forecast-grid"></div></section>
+    <section aria-labelledby="pmTitle"><div class="period-header pm"><div class="period-title"><span class="period-icon">🌙</span><div><h2 id="pmTitle" data-editable="true">PM — Drone Show / Execution Conditions</h2><p data-editable="true">Use for final weather assessment, launch-window planning, and event execution support.</p></div></div><div class="legend"><span class="legend-go">GO</span><span class="legend-watch">WATCH</span><span class="legend-no-go">NO-GO</span></div></div><div id="pmForecastGrid" class="forecast-grid"></div></section>
+    <section class="decision-note" data-editable="true"><strong>Planning Note:</strong> <span>Source fields are manual-entry placeholders until replaced with approved KCOF/NWS aviation inputs. </span> This product is a weather decision-support aid for KCOF, 27 Nov–03 Dec 2026. Replace displayed sample forecast values with current approved NWS/aviation inputs before release. Final flight or event decisions should use current observations, approved procedures, applicable restrictions, and designated authority review.</section>
+  </main>
+  <footer data-editable="true">KCOF UAS Weather Risk Product | Wind values displayed in knots and mph | Verify current observations before release</footer>
+  <script>
+    /* EDIT FORECAST DATA BELOW. Risk values: "go", "watch", or "no-go". */
+    const forecastData=[
+      {day:"Friday",date:"27 Nov",high:86,low:72,amRisk:"watch",amDecision:"WATCH",amNote:"Monitor setup conditions and gust potential.",amWind:"SE 9–13 kt (10–15 mph) | G16 kt (18 mph)",amPrecip:"20%",amLightning:"10%",amSky:"Partly Cloudy",pmRisk:"watch",pmDecision:"WATCH",pmNote:"Reassess winds and precipitation before show window.",pmWind:"SE 7–10 kt (8–12 mph) | G13 kt (15 mph)",pmPrecip:"30%",pmLightning:"15%",pmTemp:"80°F"},
+      {day:"Saturday",date:"28 Nov",high:85,low:71,amRisk:"go",amDecision:"GO",amNote:"Favorable setup and pre-flight conditions.",amWind:"ESE 7–10 kt (8–12 mph)",amPrecip:"10%",amLightning:"5%",amSky:"Mostly Clear",pmRisk:"go",pmDecision:"GO",pmNote:"Generally favorable for scheduled execution.",pmWind:"ESE 5–9 kt (6–10 mph) (6–10 mph)",pmPrecip:"10%",pmLightning:"5%",pmTemp:"78°F"},
+      {day:"Sunday",date:"29 Nov",high:84,low:70,amRisk:"watch",amDecision:"WATCH",amNote:"Monitor for intermittent showers.",amWind:"SE 9–12 kt (10–14 mph)",amPrecip:"30%",amLightning:"15%",amSky:"Partly Cloudy",pmRisk:"watch",pmDecision:"WATCH",pmNote:"Weather impacts possible near execution window.",pmWind:"SE 7–10 kt (8–12 mph)",pmPrecip:"35%",pmLightning:"20%",pmTemp:"77°F"},
+      {day:"Monday",date:"30 Nov",high:83,low:69,amRisk:"go",amDecision:"GO",amNote:"Mostly dry and favorable for pre-flight activity.",amWind:"E 5–9 kt (6–10 mph)",amPrecip:"10%",amLightning:"5%",amSky:"Mostly Clear",pmRisk:"go",pmDecision:"GO",pmNote:"Suitable for outdoor event execution.",pmWind:"E 4–7 kt (5–8 mph)",pmPrecip:"10%",pmLightning:"5%",pmTemp:"76°F"},
+      {day:"Tuesday",date:"01 Dec",high:82,low:68,amRisk:"watch",amDecision:"WATCH",amNote:"Increasing moisture; continue forecast monitoring.",amWind:"SE 7–10 kt (8–12 mph)",amPrecip:"25%",amLightning:"10%",amSky:"Partly Cloudy",pmRisk:"watch",pmDecision:"WATCH",pmNote:"Monitor precipitation and lightning trends.",pmWind:"SE 9–13 kt (10–15 mph)",pmPrecip:"40%",pmLightning:"25%",pmTemp:"75°F"},
+      {day:"Wednesday",date:"02 Dec",high:81,low:68,amRisk:"watch",amDecision:"WATCH",amNote:"Elevated wind concern during setup period.",amWind:"SE 10–16 kt (12–18 mph) | G19 kt (22 mph)",amPrecip:"45%",amLightning:"25%",amSky:"Monitor",pmRisk:"no-go",pmDecision:"NO-GO",pmNote:"Potential weather impacts require alternate planning.",pmWind:"SSE 12–17 kt (14–20 mph) | G22 kt (25 mph)",pmPrecip:"55%",pmLightning:"35%",pmTemp:"74°F"},
+      {day:"Thursday",date:"03 Dec",high:82,low:69,amRisk:"watch",amDecision:"WATCH",amNote:"Conditions improving; continue monitoring.",amWind:"SE 9–13 kt (10–15 mph)",amPrecip:"30%",amLightning:"15%",amSky:"Partly Cloudy",pmRisk:"watch",pmDecision:"WATCH",pmNote:"Maintain weather watch through event execution.",pmWind:"SE 7–10 kt (8–12 mph)",pmPrecip:"25%",pmLightning:"10%",pmTemp:"75°F"}
+    ];
+    const metric=(icon,label,value)=>`<div class="metric"><span class="metric-icon">${icon}</span><span class="metric-label">${label}</span><span class="metric-value">${value}</span></div>`;
+    function amCard(x){return `<article class="day-card" data-editable="true"><div class="card-top"><div><h3 class="day">${x.day}</h3><p class="date">${x.date} | High/Low: ${x.high}°/${x.low}°F</p></div><span class="risk-badge ${x.amRisk}">${x.amDecision}</span></div><div class="primary-readout"><span class="primary-label">AM Planning Assessment</span><span class="primary-value">${x.amDecision}</span><span class="primary-note">${x.amNote}</span></div><div class="metrics">${metric("🌬️","Wind / Gusts (kt / mph)",x.amWind)}${metric("🌧️","Precipitation",x.amPrecip)}${metric("⚡","Lightning",x.amLightning)}${metric("☁️","Sky Condition",x.amSky)}</div></article>`}
+    function pmCard(x){return `<article class="day-card pm-card" data-editable="true"><div class="card-top"><div><h3 class="day">${x.day}</h3><p class="date">${x.date} | Expected PM Temp: ${x.pmTemp}</p></div><span class="risk-badge ${x.pmRisk}">${x.pmDecision}</span></div><div class="primary-readout"><span class="primary-label">PM Execution Assessment</span><span class="primary-value">${x.pmDecision}</span><span class="primary-note">${x.pmNote}</span></div><div class="metrics">${metric("🌬️","Wind / Gusts (kt / mph)",x.pmWind)}${metric("🌧️","Precipitation",x.pmPrecip)}${metric("⚡","Lightning",x.pmLightning)}${metric("🌡️","Temperature",x.pmTemp)}</div></article>`}
+    document.getElementById("amForecastGrid").innerHTML=forecastData.map(amCard).join("");
+    document.getElementById("pmForecastGrid").innerHTML=forecastData.map(pmCard).join("");
+
+    // Browser-based editing, local save, and PDF export controls.
+    const STORAGE_KEY = "uasWeatherRiskProductEdits";
+    const editableNodes = () => [...document.querySelectorAll('[data-editable="true"]')];
+    function setEditMode(enabled) {
+      document.body.classList.toggle('edit-mode', enabled);
+      editableNodes().forEach(node => node.contentEditable = enabled ? 'true' : 'false');
+      document.getElementById('editToggle').textContent = enabled ? 'Finish Editing' : 'Edit Product';
+    }
+    function saveEdits() {
+      const changes = editableNodes().map(node => node.innerHTML);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(changes));
+      setEditMode(false);
+      alert('Changes saved in this browser. For GitHub Pages, also download/save the updated HTML source after editing its forecast data section.');
+    }
+    function loadEdits() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        if (Array.isArray(saved) && saved.length === editableNodes().length) {
+          editableNodes().forEach((node, index) => node.innerHTML = saved[index]);
+        }
+      } catch (error) { console.warn('Saved edits could not be loaded.', error); }
+    }
+    document.getElementById('editToggle').addEventListener('click', () => setEditMode(!document.body.classList.contains('edit-mode')));
+    document.getElementById('saveProduct').addEventListener('click', saveEdits);
+    document.getElementById('exportPdf').addEventListener('click', () => { setEditMode(false); window.print(); });
+    document.getElementById('resetProduct').addEventListener('click', () => {
+      if (confirm('Reset all browser-saved text changes?')) { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+    });
+    loadEdits();
+  </script>
+</body>
+</html>
